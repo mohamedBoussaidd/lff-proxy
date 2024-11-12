@@ -7,7 +7,7 @@ services:
       - 80:80
     volumes:
       - ./db-lff.conf:/etc/nginx/conf.d/db-lff.conf
-      # - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
+      - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
       # - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
 
     networks:
