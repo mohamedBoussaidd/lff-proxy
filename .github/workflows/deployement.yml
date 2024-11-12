@@ -1,4 +1,4 @@
-name: deploy lff back
+name: deploy lff proxy
 on: [push]
 env:
   IMAGE: lff-proxy
