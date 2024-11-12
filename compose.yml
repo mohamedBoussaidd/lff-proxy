@@ -6,9 +6,9 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./db-lff:/etc/nginx/conf./db-lff.conf
-      - ./api-lff:/etc/nginx/conf.d/api-lff.conf
-      # - ./web-lff:/etc/nginx/conf.d/web-lff.conf
+      - ./db-lff.conf:/etc/nginx/conf./db-lff.conf
+      - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
+      # - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
 
     networks:
       - lafacturefacile-network
