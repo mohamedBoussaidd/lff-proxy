@@ -1,0 +1,19 @@
+services:
+  proxy:
+    image: nginx:1.21.3-alpine
+    container_name: lff-proxy
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./db-lff:/etc/nginx/conf./db-lff.conf
+      - ./api-lff:/etc/nginx/conf.d/api-lff.conf
+      # - ./web-lff:/etc/nginx/conf.d/web-lff.conf
+
+    networks:
+      - lafacturefacile-network
+
+networks:
+  lafacturefacile-network:
+    external: true
+    name: lafacturefacile-network
