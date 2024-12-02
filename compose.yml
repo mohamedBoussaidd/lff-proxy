@@ -9,7 +9,7 @@ services:
     volumes:
       - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
-      - /etc/letsencrypt/live:/etc/letsencrypt/live
+      - /etc/letsencrypt/live:/etc/letsencrypt/live/api.lff.simplefacture.fr
     networks:
       - lafacturefacile-network
 
