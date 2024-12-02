@@ -10,6 +10,7 @@ services:
       - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
       - /etc/letsencrypt/live:/etc/letsencrypt/live
+      - /etc/letsencrypt/archive:/etc/letsencrypt/archive
     networks:
       - lafacturefacile-network
 
