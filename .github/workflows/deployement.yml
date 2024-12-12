@@ -43,4 +43,4 @@ jobs:
           port: 22
           script: |
             docker-compose -f /opt/applications/lff/${{env.IMAGE}}/compose.yml up -d
-            docker-compose restart ${{env.IMAGES}}
+            docker-compose restart lff-proxy
