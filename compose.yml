@@ -1,29 +1,6 @@
-# services:
-#   proxy:
-#     image: nginx:1.21.3-alpine
-#     container_name: lff-proxy
-#     restart: always
-#     ports:
-#       - 80:80
-#       - 443:443
-#     volumes:
-#       - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
-#       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
-#       - /etc/letsencrypt/live:/etc/letsencrypt/live
-#       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
-#     networks:
-#       - lafacturefacile-network
-
-# networks:
-#   lafacturefacile-network:
-#     external: true
-#     name: lafacturefacile-network
-
 services:
   proxy:
-    build:
-      context: .
-      dockerfile: Dockerfile  # Utilise le Dockerfile personnalisé
+    image: nginx:1.27.3-alpine3.20-perl
     container_name: lff-proxy
     restart: always
     ports:
@@ -34,11 +11,8 @@ services:
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
       - /etc/letsencrypt/live:/etc/letsencrypt/live
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
-      - ./modsec_rules:/etc/nginx/modsec_rules
-      - ./modsecurity.conf:/etc/nginx/modsecurity.conf
     networks:
       - lafacturefacile-network
-
 networks:
   lafacturefacile-network:
     external: true
