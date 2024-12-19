@@ -1,54 +1,66 @@
 # Utiliser l'image Nginx alpine comme base
 # FROM nginx:1.21.3-alpine3.15
+# Étape 1 : Construire libmodsecurity
+FROM debian:bullseye as builder
+
+# Installer les dépendances
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    libtool \
+    autoconf \
+    automake \
+    pkg-config \
+    git \
+    wget \
+    cmake \
+    libpcre3-dev \
+    libxml2-dev \
+    libyajl-dev \
+    curl \
+    libcurl4-openssl-dev \
+    && apt-get clean
+
+# Cloner le dépôt ModSecurity
+RUN git clone --recursive https://github.com/SpiderLabs/ModSecurity /tmp/ModSecurity
+
+# Compiler libmodsecurity
+WORKDIR /tmp/ModSecurity
+RUN ./build.sh && ./configure && make && make install
+
 FROM nginx:1.27.3-alpine3.20-perl
 
 # Installer les dépendances nécessaires pour compiler ModSecurity
 RUN apk add --no-cache \
     gcc \
-    g++ \
+    libc-dev \
     make \
-    libtool \
-    automake \
-    curl \
-    bash \
     pcre-dev \
-    zlib-dev \
     libxml2-dev \
     libxslt-dev \
-    git \
     linux-headers \
+    curl-dev \
+    yajl-dev \
+    git \
+    bash \
     && rm -rf /var/cache/apk/*
-    # Télécharger et compiler ModSecurity
-RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity.git /tmp/ModSecurity \
-    && cd /tmp/ModSecurity \
-    && git submodule init \
-    && git submodule update \
-    && ./configure \
-    && make \
-    && make install \
-    && cd / \
-    && rm -rf /tmp/ModSecurity
-    # Télécharger et compiler le module Nginx pour ModSecurity
-RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git /tmp/ModSecurity-nginx \
-    && cd /tmp/ModSecurity-nginx \
-    && git submodule init \
-    && git submodule update \
-    && cp -r /tmp/ModSecurity-nginx/modsecurity.conf-recommended /etc/nginx/modsec_includes \
-    && cd /tmp/ModSecurity-nginx \
-    && make \
-    && make install \
-    && cd / \
-    && rm -rf /tmp/ModSecurity-nginx
+# Copier libmodsecurity depuis le builder
+COPY --from=builder /usr/local/modsecurity /usr/local/modsecurity
 
-# Copier les fichiers de configuration ModSecurity
-COPY modsec_rules/ /etc/nginx/modsec_rules/
-COPY modsecurity.conf /etc/nginx/modsecurity.conf
+# Cloner le connecteur ModSecurity pour Nginx
+RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git /tmp/ModSecurity-nginx
+
+# Compiler Nginx avec le connecteur
+RUN cd /tmp/ModSecurity-nginx && \
+    ./configure --with-compat --add-module=/tmp/ModSecurity-nginx && \
+    make && make install
 
 # Configurer ModSecurity
-RUN echo "modsecurity on;" >> /etc/nginx/nginx.conf \
-    && echo "modsecurity_rules_file /etc/nginx/modsecurity.conf;" >> /etc/nginx/nginx.conf
-# Exposer les ports Nginx
-EXPOSE 80 443
+COPY modsecurity.conf /etc/nginx/modsecurity.conf
+COPY modsec_rules/ /etc/nginx/modsec_rules/
 
-# Lancer Nginx en mode avant-plan
-CMD ["nginx", "-g", "daemon off;"]
+# Configurer Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Exposer les ports HTTP/HTTPS
+EXPOSE 80 443
