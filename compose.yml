@@ -34,6 +34,8 @@ services:
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
       - /etc/letsencrypt/live:/etc/letsencrypt/live
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
+      - ./modsec_rules:/etc/nginx/modsec_rules
+      - ./modsecurity.conf:/etc/nginx/modsecurity.conf
     networks:
       - lafacturefacile-network
 
