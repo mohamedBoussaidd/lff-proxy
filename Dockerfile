@@ -23,7 +23,6 @@ RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity.git /tmp/ModSe
     && cd /tmp/ModSecurity \
     && git submodule init \
     && git submodule update \
-    && ./autogen.sh \
     && ./configure \
     && make \
     && make install \
