@@ -1,0 +1,3 @@
+[submodule "modsec_rules"]
+	path = modsec_rules
+	url = https://github.com/coreruleset/coreruleset.git
