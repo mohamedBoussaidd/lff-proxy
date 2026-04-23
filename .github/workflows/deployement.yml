@@ -50,5 +50,5 @@ jobs:
           port: 22
           script: |
             cd /opt/applications/lff/${{ env.IMAGE }}
-            docker compose up -d
-            docker compose exec proxy nginx -t && docker compose exec proxy nginx -s reload
+            docker-compose up -d
+            docker-compose exec -T proxy nginx -t && docker-compose exec -T proxy nginx -s reload
