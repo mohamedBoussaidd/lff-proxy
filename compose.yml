@@ -9,11 +9,17 @@ services:
     volumes:
       - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
+      - ./web-sportgestions.conf:/etc/nginx/conf.d/web-sportgestions.conf
+      - ./api-sportgestions.conf:/etc/nginx/conf.d/api-sportgestions.conf
       - /etc/letsencrypt/live:/etc/letsencrypt/live
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
     networks:
       - lafacturefacile-network
+      - sportgestions-network
 networks:
   lafacturefacile-network:
     external: true
     name: lafacturefacile-network
+  sportgestions-network:
+    external: true
+    name: sportgestions-network
