@@ -50,5 +50,7 @@ jobs:
           port: 22
           script: |
             cd /opt/applications/lff/${{ env.IMAGE }}
+            # docker-compose v1 plante sur "recreate" (KeyError ContainerConfig) avec les images recentes
+            # -> on supprime le container puis on le (re)cree a neuf (pas de recreate)
+            docker-compose rm -sf proxy || true
             docker-compose up -d
-            docker-compose exec -T proxy nginx -t && docker-compose exec -T proxy nginx -s reload
