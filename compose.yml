@@ -7,6 +7,11 @@ services:
       - 80:80
       - 443:443
     volumes:
+      # ⚠ Zones limit_req partagées par les vhosts sportgestions. Le préfixe 00- garantit que
+      # nginx les lit AVANT les vhosts qui les utilisent (conf.d/*.conf est inclus par ordre
+      # alphabétique). Ce montage manquant = nginx refuse de démarrer, donc LES DEUX sites
+      # tombent, pas seulement sportgestions.
+      - ./00-zones-limits.conf:/etc/nginx/conf.d/00-zones-limits.conf
       - ./api-lff.conf:/etc/nginx/conf.d/api-lff.conf
       - ./web-lff.conf:/etc/nginx/conf.d/web-lff.conf
       - ./web-sportgestions.conf:/etc/nginx/conf.d/web-sportgestions.conf
