@@ -3,6 +3,14 @@ services:
     image: nginx:1.27.3-alpine3.20-perl
     container_name: lff-proxy
     restart: always
+    # Journaux Docker BORNÉS : 5 fichiers de 20 Mo au plus, le plus ancien est effacé. C'est ici
+    # que passent les VRAIES adresses IP des visiteurs (nginx écrit son journal d'accès sur la
+    # sortie standard) ; la politique de confidentialité de sportgestions annonce 12 mois au plus.
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
     ports:
       - 80:80
       - 443:443
